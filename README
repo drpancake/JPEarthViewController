@@ -1,0 +1,4 @@
+Google Earth browser plugin in a WebView.
+
+Requires: WebKit.framework, ARC
+
