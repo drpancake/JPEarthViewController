@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript">
+            google.load("earth", "1");
+            
+            function init() {
+                google.earth.createInstance('earth', initCB, failureCB);
+            }
+            
+            function initCB(instance) {
+                var ge = instance;
+                ge.getWindow().setVisibility(true);
+                
+                // Hack: Earth plugin stays blank until a DOM change triggers layout
+                document.getElementById('earth').style.height = '99%';
+                setTimeout(function() { document.getElementById('earth').style.height = '100%'; }, 50);
+            }
+            
+            function failureCB(errorCode) {
+                document.write('Failed to load Google Earth Plugin: ' + errorCode);
+            }
+            
+            google.setOnLoadCallback(init);
+        </script>
+        <style>
+            html { overflow: hidden; height: 100%; }
+            body { margin: 0; height: 100%; }
+            #earth { height: 100%; width: 100%; }
+        </style>
+    </head>
+    <body>
+        <div id="earth"></div>
+    </body>
+</html>
