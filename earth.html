@@ -3,13 +3,14 @@
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
         <script type="text/javascript">
             google.load("earth", "1");
+            var ge = null;
             
             function init() {
                 google.earth.createInstance('earth', initCB, failureCB);
             }
             
             function initCB(instance) {
-                var ge = instance;
+                ge = instance;
                 ge.getWindow().setVisibility(true);
                 
                 // Hack: Earth plugin stays blank until a DOM change triggers layout
@@ -19,6 +20,20 @@
             
             function failureCB(errorCode) {
                 document.write('Failed to load Google Earth Plugin: ' + errorCode);
+            }
+            
+            function panAndZoom(x, y, z) {
+                if (ge != null) {
+                    // Get the current view
+                    var lookAt = ge.getView().copyAsLookAt(ge.ALTITUDE_RELATIVE_TO_GROUND);
+                    
+                    // Add to the current latitude and longitude values
+                    lookAt.setLatitude(lookAt.getLatitude() + x);
+                    lookAt.setLongitude(lookAt.getLongitude() + y);
+                    
+                    // Update the view in Google Earth
+                    ge.getView().setAbstractView(lookAt);
+                }
             }
             
             google.setOnLoadCallback(init);
