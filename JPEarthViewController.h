@@ -4,7 +4,7 @@
 
 @interface JPEarthViewController : NSViewController
 
-- (void)panX:(double)x y:(double)y zoom:(double)z;
+- (void)panX:(double)x y:(double)y;
 
 @property (nonatomic, strong, readonly) WebView *webView;
 

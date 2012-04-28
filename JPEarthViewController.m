@@ -26,9 +26,9 @@
     [webFrame loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:path]]];
 }
 
-- (void)panX:(double)x y:(double)y zoom:(double)z
+- (void)panX:(double)x y:(double)y
 {
-    NSString *js = [NSString stringWithFormat:@"panAndZoom(%f, %f, %f);", x, y, z];
+    NSString *js = [NSString stringWithFormat:@"pan(%f, %f);", x, y];
     [self.webView stringByEvaluatingJavaScriptFromString:js];
 }
 

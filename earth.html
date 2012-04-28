@@ -4,6 +4,7 @@
         <script type="text/javascript">
             google.load("earth", "1");
             var ge = null;
+            var defaultRange = 8000000; // metres
             
             function init() {
                 google.earth.createInstance('earth', initCB, failureCB);
@@ -12,6 +13,11 @@
             function initCB(instance) {
                 ge = instance;
                 ge.getWindow().setVisibility(true);
+                
+                // Default range
+                var lookAt = ge.getView().copyAsLookAt(ge.ALTITUDE_ABSOLUTE);
+                lookAt.setRange(defaultRange);
+                ge.getView().setAbstractView(lookAt);
                 
                 // Hack: Earth plugin stays blank until a DOM change triggers layout
                 document.getElementById('earth').style.height = '99%';
@@ -22,16 +28,36 @@
                 document.write('Failed to load Google Earth Plugin: ' + errorCode);
             }
             
-            function panAndZoom(x, y, z) {
+            function pan(x, y) {
                 if (ge != null) {
                     // Get the current view
-                    var lookAt = ge.getView().copyAsLookAt(ge.ALTITUDE_RELATIVE_TO_GROUND);
+                    var lookAt = ge.getView().copyAsLookAt(ge.ALTITUDE_ABSOLUTE);
                     
-                    // Add to the current latitude and longitude values
-                    lookAt.setLatitude(lookAt.getLatitude() + x);
-                    lookAt.setLongitude(lookAt.getLongitude() + y);
+                    // Add to the current lat/lng values
+                    var lat = lookAt.getLatitude() + -x;
+                    var lng = lookAt.getLongitude() + y;
+                    var changed = false;
                     
-                    // Update the view in Google Earth
+                    // Kludge: keep within these ranges to avoid having to wrap
+                    // round when we reach the limits
+                    
+                    if (lat < 120 && lat > -120) {
+                        lookAt.setLatitude(lat);
+                        changed = true;
+                    }
+                    
+                    if (lng < 180 && lng > -180) {
+                        lookAt.setLongitude(lng);
+                        changed = true;
+                    }
+                    
+                    // TODO: work out why altering lookAt causes zoom out - for now,
+                    // stay within a set absolute distance
+                    if (changed) {
+                        lookAt.setRange(defaultRange);
+                    }
+                    
+                    // Update the view
                     ge.getView().setAbstractView(lookAt);
                 }
             }
