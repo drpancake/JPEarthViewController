@@ -34,7 +34,7 @@
                     var lookAt = ge.getView().copyAsLookAt(ge.ALTITUDE_ABSOLUTE);
                     
                     // Add to the current lat/lng values
-                    var lat = lookAt.getLatitude() + -x;
+                    var lat = lookAt.getLatitude() - x;
                     var lng = lookAt.getLongitude() + y;
                     var changed = false;
                     
