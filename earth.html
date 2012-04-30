@@ -4,7 +4,8 @@
         <script type="text/javascript">
             google.load("earth", "1");
             var ge = null;
-            var defaultRange = 8000000; // metres
+            var zoomRange = 8000000; // metres
+            var zoomDiff = zoomRange / 5;
             
             function init() {
                 google.earth.createInstance('earth', initCB, failureCB);
@@ -16,7 +17,7 @@
                 
                 // Default range
                 var lookAt = ge.getView().copyAsLookAt(ge.ALTITUDE_ABSOLUTE);
-                lookAt.setRange(defaultRange);
+                lookAt.setRange(zoomRange);
                 ge.getView().setAbstractView(lookAt);
                 
                 // Hack: Earth plugin stays blank until a DOM change triggers layout
@@ -26,6 +27,16 @@
             
             function failureCB(errorCode) {
                 document.write('Failed to load Google Earth Plugin: ' + errorCode);
+            }
+            
+            function zoomIn() {
+                zoomRange -= zoomDiff;
+                pan(0, 0); // force camera update
+            }
+            
+            function zoomOut() {
+                zoomRange += zoomDiff;
+                pan(0, 0); // force camera update
             }
             
             function pan(x, y) {
@@ -52,10 +63,8 @@
                     }
                     
                     // TODO: work out why altering lookAt causes zoom out - for now,
-                    // stay within a set absolute distance
-                    if (changed) {
-                        lookAt.setRange(defaultRange);
-                    }
+                    // stay within current zoom distance
+                    lookAt.setRange(zoomRange);
                     
                     // Update the view
                     ge.getView().setAbstractView(lookAt);

@@ -32,6 +32,16 @@
     [self.webView stringByEvaluatingJavaScriptFromString:js];
 }
 
+- (void)zoomIn
+{
+    [self.webView stringByEvaluatingJavaScriptFromString:@"zoomIn();"];
+}
+
+- (void)zoomOut
+{
+    [self.webView stringByEvaluatingJavaScriptFromString:@"zoomOut();"];
+}
+
 #pragma mark -
 #pragma mark WebFrameLoadDelegate (informal)
 
